@@ -1,0 +1,24 @@
+#!/bin/bash -eu
+
+SCRIPT_DIR=$(dirname $0)
+
+usage_exit() {
+    echo "Usage: s3cse [-f] (upload|download) encrypt_key_alias source_file target_file" 1>&2
+    echo "option -f: If you want to force overwrite save"
+    exit 1
+}
+
+while getopts f:h OPT
+do
+    case $OPT in
+        f)  export S3CSE_OVERWRITE=1
+            shift $((OPTIND - 2))
+            ;;
+        h)  usage_exit
+            ;;
+        \?) usage_exit
+            ;;
+    esac
+done
+
+java -cp ${SCRIPT_DIR}/s3cse-1.0-SNAPSHOT-jar-with-dependencies.jar org.example.basicapp.App $1 $2 $3 $4
